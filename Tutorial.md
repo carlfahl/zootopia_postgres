@@ -97,9 +97,27 @@ Within Animals container create a new function called `deleteHandler` that makes
 pass it the parameter id
 in AnimalsTable add a button to the end of the table row that calls deleteHandler
 
-##Step 8: updating an animal
-Create a new file within src called `EditAnimalForm`
-Create a new fikle called `EditAnimalContainer`
+##Step 8: posting an animal
+Create a new file within src called `PostAnimalForm`
+Create a new file called `PostAnimalContainer`
+
+Add route for postNew in App.js that renders PostAnimalContainer
+
+in `PostAnimalForm` import React
+import Form, FormControl, FormGroup, and Button from react-bootstrap
+create a stateless component that will display a form
+pass onChange and onClick handlers from PostAnimalContainer to PostAnimalForm
+
+in `PostAnimalContainer` create a statefuk component
+within that component create our `onChangeHandler` function and your `onClick` Function
+Your onChangeHandler updates the appropriate state variable
+your onClick function runs a post request on your api with the state as its data
+pass these as props to your PostAnimalForm
+
+submit thi step to GitHub
+##Step 9: Updating an animal
+
+
 
 
 
