@@ -17,12 +17,21 @@ var AnimalsContainer = React.createClass({
     }).done(function (data) {
       console.log(data);
       that.setState({animals: data});
+      console.log(that.state.animals);
+    })
+  },
+  deleteHandler: function (id) {
+    $.ajax({
+      url: "/api/animals/" +id,
+      method: 'DELETE'
+    }).done(function (data) {
+      console.log(data);
     })
   },
   render: function () {
     return (
       <div>
-        <AnimalsTable animals={this.state.animals}/>
+        {this.state.animals ? <AnimalsTable animals={this.state.animals} deleteHandler={this.deleteHandler}/> : <span> I have no animals </span>}
       </div>
     );
   }

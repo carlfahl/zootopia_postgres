@@ -1,6 +1,6 @@
 import React from 'react';
 import Home from './Home';
-
+import AnimalsContainer from './AnimalsContainer';
 var App = React.createClass({
   getInitialState: function () {
     return (
@@ -13,8 +13,8 @@ var App = React.createClass({
   renderProperComponent: function () {
     if(this.state.activeComponent==='Home'){
       return(<Home updateActiveComponent={this.updateActiveComponent}/>);
-    } else {
-      return null;
+    } else if (this.state.activeComponent==='viewAll'){
+      return(<AnimalsContainer updateActiveComponent={this.updateActiveComponent}/>);
     }
   },
   render: function () {

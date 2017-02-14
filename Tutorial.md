@@ -3,6 +3,7 @@
 Fork the zootopia repository from fresh5447/zootopia to your GitHub account.
 Clone from your fork of the zootopia repo. `git clone <url>`
 checkout the react-start branch `git checkout react-start`
+in your terminal run `npm install` to install all prior dependencies
 create a react app: `create-react-app client` -this will put all the react files into the directory client
 delete the unneeded files that were created by `create-react-app`, leave only index.js and index.css
 commit this step to GitHub. --when committing doublecheck you are in the root of your project
@@ -68,6 +69,48 @@ Add a function to `getAnimalsFromServer` using a jquery ajax call
 commit this step to GitHub
 
 ##Step 5: Creating the AnimalsTable
+Create a new file `AnimalsTable` within the src directory
+import React
+import {Table, Button} from react-bootstrap
+Create a stateless component that will return a table full of your animals
+You will need to create a variable to map the array of animals and created a table row for each of the animals
+```  
+var Animals = props.animals.map(function (item) {
+    return (<tr> <td> item.name </td> <td> item.species </td> <tr>);
+```
+##Step 6: Set up simultaneous server running
+Create a file in Zootopia called Procfile.dev
+within the file put
+```
+web: cd client && npm start
+api: PORT=3001 npm run server
+```
+in the scripts object of package.json contained in zootopia add
+```
+"dev": "nf start -p 3000 --procfile Procfile.dev",
+"server": "node server.js"
+```
+in package.json contained in src add  `"proxy": "http://localhost:3001/",`
+
+##Step 7: Deleting an animals
+Within Animals container create a new function called `deleteHandler` that makes a jquery ajax call
+pass it the parameter id
+in AnimalsTable add a button to the end of the table row that calls deleteHandler
+
+##Step 8: updating an animal
+Create a new file within src called `EditAnimalForm`
+Create a new fikle called `EditAnimalContainer`
+
+
+
+
+
+
+
+
+
+
+
 
 
 
