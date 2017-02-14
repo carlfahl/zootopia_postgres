@@ -8,7 +8,7 @@ var PostAnimalForm = function (props) {
                 <FormControl type='text' placeholder="Species" onChange={ (event) => props.onChangeHandler("species", event.target.value)} />
               </FormGroup>
             </Form>
-            <Button bsStyle='success' onClick={ () => props.onClick()} > Add new animal </Button>
+            <Button bsStyle='success' onClick={ () => props.onClickHandler()} > Add new animal </Button>
           </div>
         );
 }

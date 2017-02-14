@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './Home';
 import AnimalsContainer from './AnimalsContainer';
 import PostAnimalContainer from './PostAnimalContainer';
+import EditAnimalContainer from './EditAnimalContainer';
 
 var App = React.createClass({
   getInitialState: function () {
@@ -19,6 +20,10 @@ var App = React.createClass({
       return (<AnimalsContainer updateActiveComponent={this.updateActiveComponent} />);
     } else if (this.state.activeComponent === 'postNew') {
       return (<PostAnimalContainer updateActiveComponent={this.updateActiveComponent} />);
+    } else if (this.state.activeComponent === 'editAnimal') {
+      return (<EditAnimalContainer updateActiveComponent={this.updateActiveComponent} animalId={this.state.activeId}/>);
+    } else {
+      return null;
     }
   },
   render: function () {
