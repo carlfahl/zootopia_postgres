@@ -14,7 +14,7 @@ var EditAnimalContainer = React.createClass({
   getAnimalById: function () {
     var that = this;
     $.ajax({
-      url: '/api/animals/' + this.props.animalId,
+      url: '/api/animals/' + this.props.params.animalId,
       method: 'GET'
     }).done(function (data) {
       console.log(data);
@@ -29,11 +29,11 @@ var EditAnimalContainer = React.createClass({
   onClickHandler: function functionName() {
     var that = this;
     $.ajax({
-      url: '/api/animals/' + this.props.animalId,
+      url: '/api/animals/' + this.props.params.animalId,
       method: "PUT",
       data: this.state
     }).done(function () {
-      console.log("Updated animal with id: " + that.props.animalId );
+      console.log("Updated animal with id: " + that.props.params.animalId );
       that.props.updateActiveComponent('viewAll', null);
     })
   },
