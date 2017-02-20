@@ -5,7 +5,8 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
 var LocalStrategy = require('passport-local').Strategy;
-var User = require('./models/user.js')
+var User = require('./models/user.js');
+var session = require('express-session');
 
 mongoose.connect("mongodb://localhost/zootopia");
 
@@ -38,6 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(bodyParser.json()); // for parsing application/json
 
 // initialize the passport authentication.
+app.use(session({ secret: 'bigskycodeacademyuserauth' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
