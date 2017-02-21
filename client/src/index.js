@@ -7,6 +7,7 @@ import AnimalsContainer from './AnimalsContainer';
 import PostAnimalContainer from './PostAnimalContainer';
 import EditAnimalContainer from './EditAnimalContainer';
 import Login from './Login';
+import Signup from './Signup';
 import './index.css';
 
 ReactDOM.render(
@@ -15,6 +16,7 @@ ReactDOM.render(
       <IndexRoute component={Home} />
       <Route path='/animals' component={AnimalsContainer} />
       <Route path='/post' component={PostAnimalContainer} />
+      <Route path='/signup' component={Signup} />
       <Route path='/login' component={Login} />
       <Route path='/edit/:animalId' component={EditAnimalContainer} />
     </Route>

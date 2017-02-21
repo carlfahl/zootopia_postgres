@@ -14,6 +14,7 @@ var App = React.createClass({
           </Navbar.Header>
           <Nav>
             <NavItem><Link to={'/'}>Home</Link></NavItem>
+            <NavItem><Link to={'/signup'}>Signup</Link></NavItem>
             <NavItem><Link to={'/animals'}>Show All Animals</Link></NavItem>
             <NavItem><Link to={'/post'}>Add an Animal</Link></NavItem>
           </Nav>

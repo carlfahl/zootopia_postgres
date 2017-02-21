@@ -2,66 +2,57 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var mongoose = require('mongoose');
-var passport = require('passport');
-var flash = require('connect-flash');
-var LocalStrategy = require('passport-local').Strategy;
-var User = require('./models/user.js');
+
+// The needed require statements for passport
+// express-session for keeping track of session data.
 var session = require('express-session');
+// storing use information.
+var cookieParser = require('cookie-parser');
+// For user auth
+var passport = require('passport');
+// Flash messages
+var flash = require('connect-flash');
+// Request looging
+var morgan = require('morgan');
 
-mongoose.connect("mongodb://localhost/zootopia");
+var Animal = require('./models/animal');
 
-// passport.use(new Strategy(
-passport.use('local', new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
-  },
-  function(username, password, done) {
-    User.find({'local.username': username}, function(err, user) {
-      if (err) {
-        return done(err);
-      } if (!user) {
-        return done(null, false);
-      }
-      console.log(user);
-      if (user[0].local.password != password) {
-        return cb(null, false);
-      }
-      return done(null, user);
-    });
-  }));
+mongoose.connect('mongodb://localhost/animals');
 
+// var viewRoute = require('./routes/viewAnimals');
 var animalRoutes = require('./routes/animals');
-var userRoutes = require('./routes/users');
-
-app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.json()); // for parsing application/json
+app.use(express.static('public')) // gives our app access to our static code in public folder
 
-// initialize the passport authentication.
-app.use(session({ secret: 'bigskycodeacademyuserauth' }));
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+
+// Set our app to use middleware needed for authentication
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-passport.serializeUser(function(user, done) {
-  done(null, user._id);
-});
+require('./config/passport')(passport); // pass passport for configuration
+require('./routes/userAuth')(app, passport); // load our routes and pass in our app and fully configured passport
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
+app.set('view engine', 'ejs');
 app.set('port', (process.env.PORT || 3000));
 
+var daysOfTheWeek = ["Sunday", "Monday",
+            "Tuesday", "Wednesday",
+            "Thursday", "Friday",
+            "Saturday"
+          ];
+
 app.get('/', function (req, res) {
-  res.send({message: "It's alive!!!"});
+  res.render('index', {today: daysOfTheWeek[ new Date().getDay() ]});
 });
 
-app.use('/api/animals', animalRoutes);
-app.use('/users', userRoutes);
+// app.use('/animals', viewRoute);
+app.use('/api', animalRoutes);
 
 app.listen(app.get('port'), function(){
   console.log(`🔥🔥🔥🔥🔥🔥 at: http://localhost:${app.get('port')}/`);
