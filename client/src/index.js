@@ -15,6 +15,7 @@ ReactDOM.render(
     <Route path='/' component={App} >
       <IndexRoute component={Home} />
       <Route path='/animals' component={AnimalsContainer} />
+      <Route path='/animals/:animalID' component={AnimalDetail} />
       <Route path='/post' component={PostAnimalContainer} />
       <Route path='/signup' component={Signup} />
       <Route path='/login' component={Login} />

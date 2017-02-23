@@ -7,7 +7,8 @@ var AnimalsTable = function (props) {
   var Animals = props.animals.map(function (item) {
     return (<tr><td>{item.name}</td><td>{item.species}</td>
                 <td><Button bsStyle='danger' onClick={ () => props.deleteHandler(item._id)}>Delete</Button>
-                <Link to={'/edit/' + item._id} className='btn btn-primary'>Update</Link></td>
+                <Link to={'/edit/' + item._id} className='btn btn-primary'>Update</Link>
+                <Link to={'/animals/' + item._id} className='btn btn-danger'>Details</Link></td>
             </tr>);
   });
   return (

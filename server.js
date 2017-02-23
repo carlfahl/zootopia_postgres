@@ -54,7 +54,7 @@ app.set('port', (process.env.PORT || 3001));
   // res.render('index', {today: daysOfTheWeek[ new Date().getDay() ]});
 // });
 
-app.use('/api', animalRoutes);
+app.use('/api/animals', animalRoutes);
 
 app.listen(app.get('port'), function(){
   console.log(`🔥🔥🔥🔥🔥🔥 at: http://localhost:${app.get('port')}/`);
