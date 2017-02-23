@@ -2,12 +2,6 @@ var User = require('../models/user');
 var Location = require('../models/location');
 
 module.exports = function (app, passport) {
-
-  // app.get('/login', function(req, res) {
-  // });
-
-  // process the login form
-  // app.post('/login', do all our passport stuff here);
   app.post('/login', function (req, res, next) {
     passport.authenticate('local-login', function (err, user, info) {
       if (err) {
@@ -18,23 +12,13 @@ module.exports = function (app, passport) {
         console.log("No User found.");
         return res.json(info);
       }
-      res.logIn(user, function (err) {
+      req.logIn(user, function (err) {
         if (err) {
           return next(err);
         }
         return res.json(user);
       })
-    });
-  });
-
-  // =====================================
-  // SIGNUP ==============================
-  // =====================================
-  // show the signup form
-  // render the page and pass in any flash data if it exists
-  app.get('/signup', function(req, res) {
-    res.render('signup.ejs', { message: req.flash('signupMessage') });
-    // res.json({'message': 'This is the signup page.'});
+    })(req, res, next);
   });
 
   app.post('/signup', function (req, res, next) {
@@ -42,66 +26,55 @@ module.exports = function (app, passport) {
     passport.authenticate('local-signup', function (err, user, info) {
       if (err) {
         console.log('In first error');
+        res.json({message: "Database Error"});
         return next(err);
       } else {
         if (!user) {
           console.log("Email already taken error");
-          res.json({message: "That email is already taken"})
+          res.json({message: "That email is already taken"});
+          return next()
         } else {
-          // user.save(function(e) {
-            // if(e){
-              // console.log("inside the throw error");
-              // throw e;
-            // }
-            // console.log(user, "inside save user success");
-            res.json(user);
-          // });
+          res.json(user);
         }
       }
-    });
+    })(req, res, next);
   });
 
-  app.get('/profile', isLogedIn, function (req, res) {
-    // Find the user object
-    User.findById(req.user._id)
-      // Fill in the values from the location object that the user object references.
-      // user.location is an ._id
-      // Like: Location.findById(user.location)
-      .populate('location')
-      .exec(function (err, data) {
-        console.log(data);
-        if (err) {
-          console.log(err);
-          // res.render('profile', {user: req.user, message: req.flash('updateMessage') });
-        } else {
-          res.render('profile', {user: data, message: req.flash('updateMessage') });
-        }
-      });
+  app.get('/getCurrentUser', function (req, res) {
+    if(req.user) {
+      User.findById(req.user._id)
+        .populate('location')
+        .exec(function (err, data) {
+          console.log(data);
+          if (err) {
+            console.log(err);
+          } else {
+            res.json(data);
+          }
+        });
+    } else {
+      res.json({user: null})
+    }
   });
 
   app.post('/update', isLogedIn, function (req, res) {
-    // Find a user object.
     User.findById(req.user._id, function (err, user) {
       if (err) {
         req.flash('updateMessage', 'Update Failed: Failed to Lookup User.');
         res.redirect('/profile');
         console.log(err);
       } else {
-        // Create a location object
         var location = new Location();
         location.city = req.body.city;
         location.state = req.body.state;
         location.zip = req.body.zip;
-        // Save the location object.
         location.save(function (err, location) {
           if (err) {
             console.log(err);
             req.flash('updateMessage', 'Update Failed: Failed to Save Location.');
             res.redirect('/profile');
           }
-          // Relate the user object to the location object
           user.location = location._id;
-          // Resave the user object with the new location.
           user.save(function (err, data) {
             if (err) {
               console.log(err);

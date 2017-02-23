@@ -8,6 +8,9 @@ var user = new Schema({
     username: String,
     password: String
   },
+  email: String,
+  role: String,
+  loggedIn: Boolean,
   location: {type: Schema.Types.ObjectId, ref: 'Location'}
 });
 
