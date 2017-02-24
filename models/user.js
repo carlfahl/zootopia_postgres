@@ -11,6 +11,8 @@ var user = new Schema({
   email: String,
   role: String,
   loggedIn: Boolean,
+  firstName: String,
+  lastName: String,
   location: {type: Schema.Types.ObjectId, ref: 'Location'}
 });
 

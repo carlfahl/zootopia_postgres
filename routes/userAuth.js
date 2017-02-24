@@ -75,6 +75,7 @@ module.exports = function (app, passport) {
             res.redirect('/profile');
           }
           user.location = location._id;
+          user.role = req.body.role;
           user.save(function (err, data) {
             if (err) {
               console.log(err);

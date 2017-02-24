@@ -7,7 +7,10 @@ var Router = new express.Router();
 Router.route('/')
   .get(function(req, res){
     Animal.find()
-      .populate('comments')
+      .populate({
+        path:'comments',
+        populate: {path: 'author'}
+      })
       .exec(function(err, animals){
         if (err) {
           res.json(err, 'ERROR');
@@ -33,7 +36,10 @@ Router.route('/')
 Router.route('/:id')
   .get(function(req, res){
     Animal.findById(req.params.id)
-      .populate('comments')
+      .populate({
+        path: 'comments',
+        populate: {path: 'author'}
+      })
       .exec(function(err, animal){
       if (err) {
         res.json({ message: 'there was an error finding this animal' });
@@ -76,7 +82,92 @@ Router.route('/:id')
       comment.title = req.body.title;
       comment.body = req.body.text;
       comment.author = req.user._id;
-      
+      comment.animal = req.params.id;
+      comment.save(function (err, comment) {
+        if (err) {
+          console.log("Error at comment save");
+          res.json({error: err});
+        } else {
+          Animal.findById(req.params.id, function (err, animal) {
+            if (err) {
+              console.log("Error at animal find.");
+              res.json({error: err});
+            } else {
+              animal.comments.push(comment._id);
+              animal.save(function (err, data) {
+                if (err) {
+                  console.log("Error at animal resave.");
+                  res.json({error: err});
+                } else {
+                  res.json(data);
+                }
+              });
+            }
+          });
+        }
+      });
     });
+
+    Router.route('/comments/:commentId')
+      .get(function (req, res) {
+        Comment.findById(req.params.commentId)
+        .populate('author')
+        .exec(function (err, comment) {
+          if (err) {
+            res.json({});
+          } else {
+            res.json(comment);
+          }
+        });
+      })
+      .put(function (req, res) {
+        console.log("doing commment update");
+        Comment.findById(req.params.commentId, function (err, comment) {
+          if (err) {
+            console.log("Error finding comment");
+            res.json({'error': err});
+          } else {
+            if (req.user) {
+              console.log(typeof(comment.author));
+              console.log(comment.author.toString());
+              console.log(req.user._id.toString());
+              if (comment.author.toString() === req.user._id.toString()) {
+                comment.body = req.body.text ? req.body.text : comment.body;
+                comment.title = req.body.title ? req.body.title : comment.title;
+                comment.modified = true;
+                comment.save(function (err, data) {
+                  if (err) {
+                    res.json({error: err});
+                  } else {
+                    res.json({message: "updated the comment."});
+                  }
+                });
+              } else {
+                console.log("Not authorized to update comments");
+                res.json({message: "you are not allowed to update this comment."});
+              }
+            } else {
+              res.json({error: 'You must be logged in to update comments'});
+            }
+          }
+        });
+      })
+      .delete(function (req, res) {
+        Comment.remove({'_id': req.params.commentId}, function (err, data) {
+          if (err) {
+            res.json({message: err});
+          } else {
+            res.json({message: 'deleted comment with id: '+req.params.commentId});
+          }
+        })
+      });
+
+function isAuthorized(req, res, next) {
+  if (req.user) {
+    return next();
+  } else {
+    return null;
+  }
+}
 
 module.exports = Router;
