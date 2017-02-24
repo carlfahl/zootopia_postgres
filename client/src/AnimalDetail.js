@@ -28,16 +28,18 @@ var AnimalDetail = React.createClass ({
     })
   },
   updateHandler: function () {
-
+    return null;
   },
   onSubmitHandler: function () {
     $.ajax({
       url: '/api/animals/' + this.props.params.animalId + '/comments',
       METHOD: 'POST',
-      data:
-    })
+      data: null
+    }).done(function (data) {
+      console.log(data);
+    });
     var comments = this.state.comments;
-    comments.push(text);
+    // comments.push(text);
     this.setState({comments: comments});
   },
   renderComments: function () {
@@ -54,8 +56,10 @@ var AnimalDetail = React.createClass ({
         <Well>
           <span><strong>Comments</strong></span>
         </Well>
-        {renderComments()}
+        {this.renderComments()}
       </div>
     );
   }
 });
+
+export default AnimalDetail;

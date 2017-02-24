@@ -1,8 +1,13 @@
 var express = require('express');
 var Animal = require('../models/animal');
 var Comment = require('../models/comment');
+var commentAuth = require('../myMiddleware/commentAuth');
 
 var Router = new express.Router();
+
+Router.use(function (req, res, next) {
+  return next();
+});
 
 Router.route('/')
   .get(function(req, res){
