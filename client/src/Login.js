@@ -9,8 +9,10 @@ var Login = React.createClass({
       {
         username: null,
         password: null,
-        user: null,
-        message: null
+        // username is comming from props
+        //user: null,
+        message: null,
+        messageStyle: null
       }
     );
   },
@@ -31,24 +33,24 @@ var Login = React.createClass({
       method: 'POST',
       data: User
     }).done(function (data) {
+      console.log("Done with login AJAX.");
       console.log(data);
       if (data.local) {
-        alert("User logged in");
-        self.setState({user: data});
+        // alert("User logged in");
+        self.setState({message: "User Logged in", messageStyle: "success"});
+        self.props.setCurrentUser(data);
         console.log(data);
-        window.location = "/#/";
+        setTimeout(function () {
+          window.location = "/#/";
+        }, 1500);
       } else {
-        if (data.message) {
-          alert(data.message);
-        }
-        alert("Wrong username or password");
-        self.setState({message: "Wrong username or password."});
-        // window.location = '/#/';
+        self.setState(data)
+        self.setState({messageStyle: "danger"});
       }
     });
   },
   render: function () {
-    var alertCon = <Alert bsStyle="danger"> { this.state.meassage } </Alert>;
+    var alertCon = <Alert bsStyle={this.state.messageStyle}> { this.state.message } </Alert>;
     return (
       <div>
         {this.state.message? alertCon : null}
@@ -56,7 +58,7 @@ var Login = React.createClass({
           <FormControl type="text" placeholder="username" onChange={(event) => this.onChangeHandler('username', event.target.value)} />
           <FormControl type="text" placeholder="password" onChange={(event) => this.onChangeHandler('password', event.target.value)} />
         </Form>
-        <Button bsStyle="primary" onClick={() => this.onSubmitHandler()}>Add User</Button>
+        <Button bsStyle="primary" onClick={() => this.onSubmitHandler()}>Login</Button>
       </div>
     );
   }

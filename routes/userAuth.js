@@ -6,14 +6,17 @@ module.exports = function (app, passport) {
     passport.authenticate('local-login', function (err, user, info) {
       if (err) {
         console.log("Error with authentication.");
+        res.json({message: "Server Error"});
         return next(err);
       }
       if (!user) {
         console.log("No User found.");
-        return res.json(info);
+        res.json({message: "Wrong Username or password."});
+        return next(info);
       }
       req.logIn(user, function (err) {
         if (err) {
+          res.json({message:"Failed to log the user into request."});
           return next(err);
         }
         return res.json(user);
@@ -56,6 +59,11 @@ module.exports = function (app, passport) {
       res.json({user: null})
     }
   });
+
+  app.get('/logout', function (req, res) {
+    req.logout();
+    res.json({message: "Logged out"});
+  })
 
   app.post('/update', isLogedIn, function (req, res) {
     User.findById(req.user._id, function (err, user) {

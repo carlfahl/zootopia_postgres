@@ -13,30 +13,13 @@ import './index.css';
 import $ from 'jquery';
 
 var AppWrapper = React.createClass({
-  getInitialState: function () {
-    return (
-      {
-        user: null
-      }
-    )
-  },
-  getCurrentUser: function () {
-    var self = this;
-    $.ajax({
-      url: '/getCurrentUser',
-      method: 'GET'
-    }).done(function (data) {
-      self.setState({user: data});
-      console.log(data);
-    });
-  },
   render: function () {
     return (
       <Router history={hashHistory}>
-        <Route path='/' user={this.state.user} getCurrentUser={this.getCurrentUser} component={App} >
-          <IndexRoute user={this.state.user} component={Home} />
+        <Route path='/' component={App} >
+          <IndexRoute component={Home} />
           <Route path='/animals' component={AnimalsContainer} />
-          <Route path='/animals/:animalID' component={AnimalDetail} />
+          <Route path='/animals/:animalId' component={AnimalDetail} />
           <Route path='/post' component={PostAnimalContainer} />
           <Route path='/signup' component={Signup} />
           <Route path='/login' component={Login} />

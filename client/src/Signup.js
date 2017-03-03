@@ -44,7 +44,7 @@ var Signup = React.createClass({
     });
   },
   render: function () {
-    var alertCon = <Alert bsStyle="danger"> { this.state.meassage } </Alert>;
+    var alertCon = <Alert bsStyle="danger"> { this.state.message } </Alert>;
     return (
       <div>
         {this.state.message? alertCon : null}
