@@ -4,6 +4,7 @@ import React from 'react';
 import { Well, Panel } from 'react-bootstrap';
 import $ from 'jquery';
 import NewCommentForm from './NewCommentForm';
+import SearchForm from './SearchForm';
 
 var AnimalDetail = React.createClass ({
   getInitialState: function () {
@@ -13,7 +14,9 @@ var AnimalDetail = React.createClass ({
         species: null,
         newCommentText: null,
         newCommentTitle: null,
-        comments: []
+        comments: [],
+        filteredComments: [],
+        searchText: null
       }
     );
   },
@@ -36,6 +39,15 @@ var AnimalDetail = React.createClass ({
     newData[field] = value;
     this.setState(newData);
   },
+  searchComments: function () {
+    if (this.searchText !== '') {
+      var self = this;
+      var filteredComments = this.state.comments.filter(function (item) {
+        return (item.body.indexOf(self.state.searchText) !== -1);
+      });
+      this.setState({'filteredComments': filteredComments});
+    }
+  },
   onSubmitHandler: function (e) {
     e.preventDefault();
     const commentData = {text: this.state.newCommentText, title: this.state.newCommentTitle};
@@ -56,12 +68,18 @@ var AnimalDetail = React.createClass ({
     this.setState({comments: comments});
   },
   renderComments: function () {
+    var self = this;
     return this.state.comments.map(function (item) {
-      return (<Well>
-                <h3>{item.title}</h3>
+      if (self.state.filteredComments.includes(item)) {
+        var style = "success";
+      } else {
+        var style = "default";
+      }
+      console.log(style);
+      return (<Panel header={item.title} bsStyle={style}>
                 <p>{item.body}</p>
                 <span><strong>--{item.author.local.username}</strong></span>
-              </Well>)
+              </Panel>)
     });
   },
   render: function () {
@@ -73,6 +91,7 @@ var AnimalDetail = React.createClass ({
         <Panel>
           <h5><strong>Comments</strong></h5>
         </Panel>
+        <SearchForm onChangeHandler={this.onChangeHandler} searchComments={this.searchComments} />
         {this.renderComments()}
         <NewCommentForm onChangeHandler={this.onChangeHandler} onSubmitHandler={this.onSubmitHandler}/>
       </div>
