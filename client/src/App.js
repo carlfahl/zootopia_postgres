@@ -16,17 +16,16 @@ var App = React.createClass({
   },
   getCurrentUser: function () {
     console.log("Running the getCurrentUser function.")
-    var self = this;
     $.ajax({
       url: '/getCurrentUser',
       method: 'GET'
-    }).done(function (data) {
+    }).done((data) => {
       if (data.user !== null) {
         console.log(data);
-        self.setState({user: data, username: data.local.username});
-        console.log(self.state.user);
+        this.setState({user: data, username: data.local.username});
+        console.log(this.state.user);
       } else {
-        self.setState(data);
+        this.setState(data);
       }
     });
   },
@@ -40,15 +39,14 @@ var App = React.createClass({
 
   },
   logoutUser: function () {
-    var self = this;
     $.ajax({
       url: '/logout',
       method: 'GET'
-    }).done(function (data) {
-      self.setState(data);
+    }).done((data) => {
+      this.setState(data);
     });
-    setTimeout(function () {
-      self.setState({user: null, message: null});
+    setTimeout(() => {
+      this.setState({user: null, message: null});
       window.location = '/#/'
     }, 1500);
   },
@@ -87,7 +85,8 @@ var App = React.createClass({
           {this.props.children && React.cloneElement(this.props.children,
             {
               setCurrentUser: this.setCurrentUser,
-              user: this.state.user,
+              getCurrentUser: this.getCurrentUser,
+              user: this.state.user
             })}
         </div>
       </div>

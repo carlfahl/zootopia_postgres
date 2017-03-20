@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import {Table, Button} from 'react-bootstrap';
+import {Table, Form, FormControl, Button, Checkbox} from 'react-bootstrap';
 
 
 var AnimalsTable = function (props) {
@@ -13,17 +13,32 @@ var AnimalsTable = function (props) {
   });
   return (
     <div>
-    <h1> Animals of Zootopia </h1>
+      <h1> Animals of Zootopia </h1>
+      <Form inline>
+        <FormControl type='text'
+          placeholder='limit'
+          onChange={(e) => props.onChangeHandler('limit', e.target.value)}
+        />
+        <Checkbox
+          onChange={(e) => props.onChangeHandler('sort', e.target.checked)}>
+          Sort by Name
+        </Checkbox>
+        <Checkbox
+          onChange={(e) => props.onChangeHandler('select', e.target.checked)}>
+          Select only name
+        </Checkbox>
+      </Form>
+      <Button bsStyle='primary' onClick={() => props.onClickHandler()}>Limit Result</Button>
       <Table  hover>
         <thead>
           <tr>
             <th> Name </th>
             <th> Species </th>
           </tr>
-          </thead>
-          <tbody>
-            {Animals}
-          </tbody>
+        </thead>
+        <tbody>
+          {Animals}
+        </tbody>
       </Table>
     </div>
   );

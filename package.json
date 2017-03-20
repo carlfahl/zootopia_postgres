@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Learn full stack js by doing",
   "main": "server.js",
+  "engines": {
+    "node": "6.10.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
@@ -21,16 +24,20 @@
   },
   "homepage": "https://github.com/fresh5447/zootopia#readme",
   "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.16.0",
     "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
     "mongoose": "^4.8.1",
+    "morgan": "^1.8.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "foreman": "^2.0.0"
+    "foreman": "^2.0.0",
+    "gulp": "^3.9.1"
   }
 }

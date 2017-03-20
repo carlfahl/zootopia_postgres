@@ -1,0 +1,8 @@
+{
+  "name": "Zootopia",
+  "description": "Full stack javascript animals list",
+  "repository": "https://github.com/carlfahl/myZootopia.git",
+  "logo": "",
+  "keywords": ["node", "express", "static"],
+  "image": "heroku/nodejs"
+}

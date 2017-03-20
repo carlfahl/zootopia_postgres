@@ -19,7 +19,7 @@ var PostAnimalContainer = React.createClass ({
       data: this.state
     }).done(function (data) {
       console.log(data);
-      that.props.updateActiveComponent('viewAll', null)
+      window.location = "/#/animals";
     })
   },
   render: function () {

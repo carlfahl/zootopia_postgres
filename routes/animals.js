@@ -11,11 +11,17 @@ Router.use(function (req, res, next) {
 
 Router.route('/')
   .get(function(req, res){
+    console.log('Limit result to: ', req.query.limit);
+    console.log('Sort by: ', req.query.sort);
     Animal.find()
       .populate({
         path:'comments',
         populate: {path: 'author'}
       })
+      .limit(req.query.limit)
+      .sort(req.query.sort)
+      .select(req.query.select)
+      // .where()
       .exec(function(err, animals){
         if (err) {
           res.json(err, 'ERROR');
@@ -113,6 +119,16 @@ Router.route('/:id')
       });
     });
 
+    Router.route('/:id/comments/:commentId')
+      .delete(function (req, res) {
+        Animal.findById(req.params.id, function (err, animal) {
+          var deleteIndex = animal.comments.indexOf(req.params.commentId);
+          animal.comments = animals.comments.slice(0, deleteIndex).concat(animal.comments.slice(deleteIndex+1));
+          animal.save();
+        });
+        Comment.remove({'_id': req.params.commentId});
+      })
+
     Router.route('/comments/:commentId')
       .get(function (req, res) {
         Comment.findById(req.params.commentId)
@@ -158,6 +174,11 @@ Router.route('/:id')
         });
       })
       .delete(function (req, res) {
+        Comment.findById(req.params.commentId, function (err, comment) {
+          Animal.findById(comment.animal, function (err, animal) {
+            animal.comments.indexOf(req.params.commentId)
+          })
+        })
         Comment.remove({'_id': req.params.commentId}, function (err, data) {
           if (err) {
             res.json({message: err});
