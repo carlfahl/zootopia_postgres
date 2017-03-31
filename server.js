@@ -31,7 +31,15 @@ var animalRoutes = require('./routes/animals');
 
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.json()); // for parsing application/json
-app.use(express.static('public')) // gives our app access to our static code in public folder
+// app.use(express.static('public')) // gives our app access to our static code in public folder
+
+// Express only serves static assets in production
+const isProd = process.env.NODE_ENV === 'production';
+const clientPath = isProd ? 'client/build' : 'client/public';
+
+if (isProd) {
+  app.use(express.static(clientPath));
+}
 
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -63,6 +71,10 @@ app.set('port', (process.env.PORT || 3001));
 // });
 
 app.use('/api/animals', animalRoutes);
+
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, clientPath, 'index.html'));
+});
 
 app.listen(app.get('port'), function(){
   console.log(`🔥🔥🔥🔥🔥🔥 at: http://localhost:${app.get('port')}/`);
