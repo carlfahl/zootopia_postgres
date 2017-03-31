@@ -3,8 +3,8 @@
 Learn full stack javascript by doing.
 
 ----
-#### Branches
 
+<<<<<<< HEAD
 ----
 
 * __Master__ (README.md)
@@ -33,3 +33,6 @@ Learn full stack javascript by doing.
 * __React-solution-react-router-production__ Since we prefer the architecture with React Router , this is the code base we use to push up to production.
 
 * __React-solution-react-router-es6__ Architecture = maximum effeort
+=======
+* __React-start__ This starting code base provides a fully functional database RESTful CRUD API using MongoDB. Make sure you start your server and utilize all of your endpoints before moving forward. If you do not understand how we got to this point, look through the commits for this branch.
+>>>>>>> addComments
