@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var mongoose = require('mongoose');
 var uriUtil = require('mongodb-uri');
+var path = require('path');
 
 // The needed require statements for passport
 // express-session for keeping track of session data.
