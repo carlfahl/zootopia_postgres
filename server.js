@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var mongoose = require('mongoose');
+var uriUtil = require('mongodb-uri');
 
 // The needed require statements for passport
 // express-session for keeping track of session data.
@@ -17,7 +18,14 @@ var morgan = require('morgan');
 
 var Animal = require('./models/animal');
 
-mongoose.connect('mongodb://localhost/animals');
+var options = {
+server:  { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+};
+var mongodbUri = process.env.MONGODB_URI || "mongodb://localhost/animals";
+var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+
+mongoose.connect(mongooseUri, options);
 
 var animalRoutes = require('./routes/animals');
 

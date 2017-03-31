@@ -13,7 +13,7 @@ Router.route('/')
   .get(function(req, res){
     console.log('Limit result to: ', req.query.limit);
     console.log('Sort by: ', req.query.sort);
-    Animal.find()
+    Animal.find({name: {$nin:['Jeff', 'Bob']}})
       .populate({
         path:'comments',
         populate: {path: 'author'}
@@ -21,7 +21,7 @@ Router.route('/')
       .limit(req.query.limit)
       .sort(req.query.sort)
       .select(req.query.select)
-      // .where()
+      // .where('name').notin(['Jeff', 'Bob'])
       .exec(function(err, animals){
         if (err) {
           res.json(err, 'ERROR');
