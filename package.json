@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/fresh5447/zootopia#readme",
   "dependencies": {
+    "auth0-lock": "^10.14.0",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.16.0",
     "connect-flash": "^0.1.1",

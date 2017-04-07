@@ -15,19 +15,7 @@ var App = React.createClass({
     );
   },
   getCurrentUser: function () {
-    console.log("Running the getCurrentUser function.")
-    $.ajax({
-      url: '/getCurrentUser',
-      method: 'GET'
-    }).done((data) => {
-      if (data.user !== null) {
-        console.log(data);
-        this.setState({user: data, username: data.local.username});
-        console.log(this.state.user);
-      } else {
-        this.setState(data);
-      }
-    });
+    this.setState({user: this.props.route.auth.getUser()});
   },
   setCurrentUser: function (user) {
     this.setState({user: user});
@@ -35,25 +23,10 @@ var App = React.createClass({
   componentWillMount: function () {
     this.getCurrentUser();
   },
-  componentWillUpdate: function (nextProps, nextState) {
-
-  },
-  logoutUser: function () {
-    $.ajax({
-      url: '/logout',
-      method: 'GET'
-    }).done((data) => {
-      this.setState(data);
-    });
-    setTimeout(() => {
-      this.setState({user: null, message: null});
-      window.location = '/#/'
-    }, 1500);
-  },
   renderLogin: function () {
     if (this.state.user) {
       return (
-        <NavItem><Link onClick={(event) => this.logoutUser(event)}>Logout</Link></NavItem>
+        <NavItem><Link onClick={() => {this.props.route.auth.logout(); window.location='/'}}>Logout</Link></NavItem>
       );
     } else {
       return (
@@ -72,7 +45,7 @@ var App = React.createClass({
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem>The current user is: {this.state.user && this.state.user.local ? this.state.user.local.username : "None"}</NavItem>
+            <NavItem>The current user is: {this.state.user ? this.state.user : "None"}</NavItem>
             <NavItem><Link to={'/'}>Home</Link></NavItem>
             <NavItem><Link to={'/animals'}>Show All Animals</Link></NavItem>
             <NavItem><Link to={'/post'}>Add an Animal</Link></NavItem>
@@ -86,7 +59,8 @@ var App = React.createClass({
             {
               setCurrentUser: this.setCurrentUser,
               getCurrentUser: this.getCurrentUser,
-              user: this.state.user
+              user: this.state.user,
+              auth: this.props.route.auth //sends auth instance from route to children
             })}
         </div>
       </div>

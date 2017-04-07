@@ -88,12 +88,25 @@ Router.route('/:id')
 
 // routes for comments
 Router.route('/:id/comments')
+  .get(function (req, res) {
+    Comment.findAll({
+      where: {
+        animalId: req.params.id
+      }
+    })
+    .then(todos => {
+      res.json({todos});
+    })
+    .catch(error => {
+      res.json({error});
+    })
+  })
   .post(function (req, res) {
-    console.log(req.user._id);
     Comment.create({
       title: req.body.title,
       body: req.body.text,
-      userId: req.user._id,
+      author: req.body.user,
+      picture: req.body.picture,
       animalId: req.params.id,
     })
     .then(comment => {
@@ -105,6 +118,43 @@ Router.route('/:id/comments')
   });
 
 Router.route('/:id/comments/:commentId')
+  .get(function (req, res) {
+    Comment.findById(req.params.commentId)
+    .then(comment => {
+      res.json({comment});
+    })
+    .catch(error => {
+      res.json({error});
+    });
+  })
+  .put(function (req, res) {
+    var user = req.body.user;
+    if (user) {
+      Comment.findById(req.params.commentId)
+      .then(comment => {
+        if (user === comment.author) {
+          comment.update({
+            body: req.body.text? req.body.text : comment.body,
+            title: req.body.title? req.body.title : comment.title,
+            modified: true
+          })
+          .then(comment => {
+            res.json({comment});
+          })
+          .catch(error => {
+            res.json({error});
+          });
+        } else {
+          res.json({message: "you are not allowed to update this comment."});
+        }
+      })
+      .catch(error => {
+        res.json({error});
+      });
+    } else {
+      res.json({error: 'You must be logged in to update comments'});
+    }
+  })
   .delete(function (req, res) {
     Comment.findById(req.params.commentId)
     .then(comment => {
@@ -119,76 +169,6 @@ Router.route('/:id/comments/:commentId')
     .catch(error => {
       res.json({error});
     });
-  })
-
-Router.route('/comments/:commentId')
-  .get(function (req, res) {
-    Comment.findById(req.params.commentId, {
-      include: [{
-        model: User,
-        as: 'author',
-      }]
-    })
-    .then(comment => {
-      res.json({comment});
-    })
-    .catch(error => {
-      res.json({error});
-    });
-  })
-  .put(function (req, res) {
-    console.log("doing commment update");
-    Comment.findById(req.params.commentId, function (err, comment) {
-      if (err) {
-        console.log("Error finding comment");
-        res.json({'error': err});
-      } else {
-        if (req.user) {
-          console.log(typeof(comment.author));
-          console.log(comment.author.toString());
-          console.log(req.user._id.toString());
-          if (comment.author.toString() === req.user._id.toString()) {
-            comment.body = req.body.text ? req.body.text : comment.body;
-                comment.title = req.body.title ? req.body.title : comment.title;
-                comment.modified = true;
-                comment.save(function (err, data) {
-                  if (err) {
-                    res.json({error: err});
-                  } else {
-                    res.json({message: "updated the comment."});
-                  }
-                });
-              } else {
-                console.log("Not authorized to update comments");
-                res.json({message: "you are not allowed to update this comment."});
-              }
-            } else {
-              res.json({error: 'You must be logged in to update comments'});
-            }
-          }
-        });
-      })
-      .delete(function (req, res) {
-        Comment.findById(req.params.commentId, function (err, comment) {
-          Animal.findById(comment.animal, function (err, animal) {
-            animal.comments.indexOf(req.params.commentId)
-          })
-        })
-        Comment.remove({'_id': req.params.commentId}, function (err, data) {
-          if (err) {
-            res.json({message: err});
-          } else {
-            res.json({message: 'deleted comment with id: '+req.params.commentId});
-          }
-        })
-      });
-
-function isAuthorized(req, res, next) {
-  if (req.user) {
-    return next();
-  } else {
-    return null;
-  }
-}
+  });
 
 module.exports = Router;

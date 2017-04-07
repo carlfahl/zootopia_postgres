@@ -3,6 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var Comment = sequelize.define('Comment', {
     title: DataTypes.STRING,
     body: DataTypes.STRING,
+    author: DataTypes.STRING,
+    picture: DataTypes.STRING,
     modified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
@@ -11,10 +13,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Comment.belongsTo(models.User, {
-          foreignKey: 'userId',
-          onDelete: 'CASCADE'
-        });
         Comment.belongsTo(models.Animal, {
           foreignKey: 'animalId',
           onDelete: 'CASCADE'

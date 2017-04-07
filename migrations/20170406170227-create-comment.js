@@ -20,6 +20,12 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
+      author: {
+        type: Sequelize.STRING
+      },
+      picture: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -35,15 +41,6 @@ module.exports = {
           model: 'Animals',
           key: 'id',
           as: 'animalId',
-        },
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'userId',
         },
       },
     });
