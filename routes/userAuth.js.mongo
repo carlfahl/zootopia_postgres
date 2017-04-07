@@ -1,5 +1,5 @@
-var User = require('../models_mongoose/user');
-var Location = require('../models_mongoose/location');
+var User = require('../models/user');
+var Location = require('../models/location');
 
 module.exports = function (app, passport) {
   app.post('/login', function (req, res, next) {

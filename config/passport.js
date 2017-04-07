@@ -1,7 +1,7 @@
 // Setup to use the local stratigy of passport.
 var LocalStrategy = require('passport-local').Strategy;
 // Include the data model for our users
-var User = require('../models/user.js');
+var User = require('../models_mongoose/user.js');
 
 module.exports = function (passport) {
   // =========================================================================

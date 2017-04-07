@@ -1,27 +1,18 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
-
-var Schema = mongoose.Schema;
-
-var user = new Schema({
-  local: {
-    username: String,
-    password: String
-  },
-  email: String,
-  role: String,
-  loggedIn: Boolean,
-  firstName: String,
-  lastName: String,
-  location: {type: Schema.Types.ObjectId, ref: 'Location'}
-});
-
-user.methods.generateHash = function (password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
+    username: DataTypes.STRING,
+    password: DataTypes.STRING,
+    email: DataTypes.STRING,
+    role: DataTypes.STRING,
+    loggedIn: DataTypes.BOOLEAN,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING
+  }, {
+    classMethods: {
+      associate: function(models) {
+      }
+    }
+  });
+  return User;
 };
-
-user.methods.validPassword = function functionName (password) {
-  return bcrypt.compareSync(password, this.local.password);
-};
-
-module.exports = mongoose.model('User', user);

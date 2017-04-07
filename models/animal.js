@@ -1,10 +1,17 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-var AnimalSchema = new Schema({
-  name: String,
-  species: String,
-  comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
-});
-
-module.exports = mongoose.model('Animal', AnimalSchema);
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var Animal = sequelize.define('Animal', {
+    name: DataTypes.STRING,
+    species: DataTypes.STRING
+  }, {
+    classMethods: {
+      associate: function(models) {
+        Animal.hasMany(models.Comment, {
+          foreignKey: 'animalId',
+          as: 'animalComments'
+        });
+      }
+    }
+  });
+  return Animal;
+};
