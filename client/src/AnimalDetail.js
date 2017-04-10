@@ -1,7 +1,7 @@
 // This is a view for showing the Details of One animal
 
 import React from 'react';
-import { Well, Panel } from 'react-bootstrap';
+import { Well, Panel, Form, FormControl, Button } from 'react-bootstrap';
 import $ from 'jquery';
 import NewCommentForm from './NewCommentForm';
 import SearchForm from './SearchForm';
@@ -14,6 +14,7 @@ var AnimalDetail = React.createClass ({
         species: null,
         newCommentText: null,
         newCommentTitle: null,
+        newReplyText: null,
         comments: [],
         filteredComments: [],
         searchText: null
@@ -41,16 +42,18 @@ var AnimalDetail = React.createClass ({
   },
   searchComments: function () {
     if (this.searchText !== '') {
-      var self = this;
-      var filteredComments = this.state.comments.filter(function (item) {
-        return (item.body.indexOf(self.state.searchText) !== -1);
+      var filteredComments = this.state.comments.filter((item) => {
+        return (item.body.indexOf(this.state.searchText) !== -1);
       });
       this.setState({'filteredComments': filteredComments});
     }
   },
   onSubmitHandler: function (e) {
     e.preventDefault();
-    const commentData = {text: this.state.newCommentText, title: this.state.newCommentTitle};
+    const commentData = {text: this.state.newCommentText,
+      title: this.state.newCommentTitle,
+      user: this.props.auth.getUser(),
+      picture: this.props.auth.getUserPic()};
     console.log(commentData);
     $.ajax({
       url: '/api/animals/' + this.props.params.animalId + '/comments',
@@ -63,14 +66,30 @@ var AnimalDetail = React.createClass ({
     if (!comments) {
       comments = [];
     }
-    var newComment = {author: {local: {username: this.props.user.local.username}}, body: this.state.newCommentText, title: this.state.newCommentTitle};
+    var newComment = {author: this.props.auth.getUser(),
+      body: this.state.newCommentText,
+      title: this.state.newCommentTitle,
+      picture: this.props.auth.getUserPic()};
     comments.push(newComment);
     this.setState({comments: comments});
   },
+  postReply: function (commentId) {
+    const commentData = {text: this.state.newReplyText,
+      user: this.props.auth.getUser(),
+      picture: this.props.auth.getUserPic()};
+    console.log(commentData);
+    $.ajax({
+      url: '/api/animals/' + this.props.params.animalId + '/comments/' + commentId + '/replies',
+      method: 'POST',
+      data: commentData
+    }).done(function (data) {
+      console.log(data);
+      window.location = '/animals/' + this.props.params.animalId;
+    });
+  },
   renderComments: function () {
-    var self = this;
-    return this.state.comments.map(function (item) {
-      if (self.state.filteredComments.includes(item)) {
+    return this.state.comments.map((item) => {
+      if (this.state.filteredComments.includes(item)) {
         var style = "success";
       } else {
         var style = "default";
@@ -78,8 +97,23 @@ var AnimalDetail = React.createClass ({
       console.log(style);
       return (<Panel header={item.title} bsStyle={style}>
                 <p>{item.body}</p>
-                <span><strong>--{item.author}</strong></span>
-              </Panel>)
+                <span><strong><img src={item.picture} alt="profile pic" />
+                --{item.author}</strong></span>
+              {item.commentReplies.map(reply => {
+                return (
+                  <Panel header={`Reply by ${reply.user}`} >
+                    <img src={reply.picture} alt='profile pic' />
+                    <p>{reply.text}</p>
+                  </Panel>
+                )
+              })}
+              <Form>
+                <FormControl type='text'
+                  onChange={(event) => this.onChangeHandler('newReplyText', event.target.value)}
+                  placeholder='reply...' />
+              </Form>
+              <Button bsStyle='primary' onClick={() => this.postReply(item.id)}>Post Reply</Button>
+            </Panel>);
     });
   },
   render: function () {

@@ -13,6 +13,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Comment.hasMany(models.Reply, {
+          foreignKey: 'commentId',
+          as: 'commentReplies'
+        });
         Comment.belongsTo(models.Animal, {
           foreignKey: 'animalId',
           onDelete: 'CASCADE'

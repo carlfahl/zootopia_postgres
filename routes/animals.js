@@ -1,6 +1,7 @@
 var express = require('express');
 var Animal = require('../models').Animal;
 var Comment = require('../models').Comment;
+var Reply = require('../models').Reply;
 var commentAuth = require('../myMiddleware/commentAuth');
 
 var Router = new express.Router();
@@ -14,7 +15,11 @@ Router.route('/')
     Animal.findAll({
       include: [{
         model: Comment,
-        as: 'animalComments'
+        as: 'animalComments',
+        include: [{
+          model: Reply,
+          as: 'commentReplies'
+        }]
       }]
     })
     .then(animals => {
@@ -42,7 +47,11 @@ Router.route('/:id')
     Animal.findById(req.params.id, {
       include: [{
         model: Comment,
-        as: 'animalComments'
+        as: 'animalComments',
+        include: [{
+          model: Reply,
+          as: 'commentReplies'
+        }]
       }]
     })
     .then(animal => {
@@ -170,5 +179,21 @@ Router.route('/:id/comments/:commentId')
       res.json({error});
     });
   });
+
+Router.route('/:id/comments/:commentId/replies')
+  .post(function (req, res) {
+    Reply.create({
+      text: req.body.text,
+      user: req.body.user,
+      picture: req.body.picture,
+      commentId: req.params.commentId
+    })
+    .then(reply => {
+      res.json({reply});
+    })
+    .catch(error => {
+      res.json({error});
+    })
+  })
 
 module.exports = Router;

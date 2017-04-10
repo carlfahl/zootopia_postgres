@@ -1,27 +1,17 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Comments', {
+    return queryInterface.createTable('Replies', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      text: {
         type: Sequelize.STRING
       },
-      body: {
-        type: Sequelize.STRING
-      },
-      modified: {
-        type: Sequelize.BOOLEAN
-      },
-      date: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      },
-      author: {
+      user: {
         type: Sequelize.STRING
       },
       picture: {
@@ -35,18 +25,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      animalId: {
+      commentId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'Animals',
+          model: 'Comments',
           key: 'id',
-          as: 'animalId',
+          as: 'commentId',
         },
       },
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Comments');
+    return queryInterface.dropTable('Replies');
   }
 };
