@@ -60,8 +60,11 @@ var AnimalsContainer = React.createClass({
   render: function () {
     return (
       <div>
-        Welcome, {this.props.user.local.username}
-        {this.state.animals ? <AnimalsTable onClickHandler={this.reload} onChangeHandler={this.onChangeHandler} animals={this.state.animals} deleteHandler={this.deleteHandler} /> : <span> I have no animals </span>}
+        Welcome, {this.props.auth.getUser()}
+        {this.state.animals ? <AnimalsTable onClickHandler={this.reload}
+        onChangeHandler={this.onChangeHandler}
+        animals={this.state.animals}
+        deleteHandler={this.deleteHandler} /> : <span> I have no animals </span>}
       </div>
     );
   }

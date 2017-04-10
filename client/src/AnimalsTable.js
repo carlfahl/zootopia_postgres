@@ -4,11 +4,11 @@ import {Table, Form, FormControl, Button, Checkbox} from 'react-bootstrap';
 
 
 var AnimalsTable = function (props) {
-  var Animals = props.animals.map(function (item) {
+  var Animals = props.animals.animals.map(function (item) {
     return (<tr><td>{item.name}</td><td>{item.species}</td>
-                <td><Button bsStyle='danger' onClick={ () => props.deleteHandler(item._id)}>Delete</Button>
-                <Link to={'/edit/' + item._id} className='btn btn-primary'>Update</Link>
-                <Link to={'/animals/' + item._id} className='btn btn-danger'>Details</Link></td>
+                <td><Button bsStyle='danger' onClick={ () => props.deleteHandler(item.id)}>Delete</Button>
+                <Link to={'/edit/' + item.id} className='btn btn-primary'>Update</Link>
+                <Link to={'/animals/' + item.id} className='btn btn-danger'>Details</Link></td>
             </tr>);
   });
   return (

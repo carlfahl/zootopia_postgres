@@ -31,7 +31,7 @@ var AnimalDetail = React.createClass ({
       method: 'GET'
     }).done(function (data) {
       console.log(data);
-      self.setState({name: data.name, species: data.species, comments: data.comments});
+      self.setState({name: data.animal.name, species: data.animal.species, comments: data.animal.animalComments});
     })
   },
   onChangeHandler: function (field, value) {
@@ -78,7 +78,7 @@ var AnimalDetail = React.createClass ({
       console.log(style);
       return (<Panel header={item.title} bsStyle={style}>
                 <p>{item.body}</p>
-                <span><strong>--{item.author.local.username}</strong></span>
+                <span><strong>--{item.author}</strong></span>
               </Panel>)
     });
   },
